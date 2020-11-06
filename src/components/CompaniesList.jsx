@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { actions } from '../slices';
 
 const hadleClick = (id, dispatch) => () => {
-  dispatch(actions.setCurretnCompanyId({ companyId: id }));
+  dispatch(actions.setCurrentCompanyId({ companyId: id }));
 };
 
 const renderCompanyLink = ({ login, id }, dispatch) => (
@@ -15,12 +15,21 @@ const renderCompanyLink = ({ login, id }, dispatch) => (
 );
 
 export default () => {
-  const companies = useSelector(({ companies: { companiesList } }) => companiesList);
+  const companies = useSelector((state) => {
+    const { companiesById, allIds } = state.companies;
+
+    return allIds.map((id) => companiesById[id]);
+  });
   const dispatch = useDispatch();
 
   return (
     <div className="d-flex flex-column">
-      {companies.length > 0 && companies.map((company) => renderCompanyLink(company, dispatch))}
+      <p className="mb-2">Companies</p>
+      {companies.length > 0
+        ? companies.map((company) => renderCompanyLink(company, dispatch))
+        : (
+          <p className="text-center">Companies are not downloaded yet.</p>
+        )}
     </div>
   );
 };

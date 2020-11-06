@@ -5,14 +5,16 @@ import axios from 'axios';
 const companiesSlice = createSlice({
   name: 'companies',
   initialState: {
-    companiesList: [],
+    companiesById: {},
+    allIds: [],
     currentCompanyId: null,
   },
   reducers: {
     getCompanySuccess(state, { payload: { company } }) {
-      state.companiesList.push(company);
+      state.companiesById[company.id] = company;
+      state.allIds.push(company.id);
     },
-    setCurretnCompanyId(state, { payload: { companyId } }) {
+    setCurrentCompanyId(state, { payload: { companyId } }) {
       state.currentCompanyId = companyId;
     },
   },

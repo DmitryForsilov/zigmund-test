@@ -4,6 +4,7 @@ import {
   FormGroup,
   FormControl,
   Button,
+  Spinner,
 } from 'react-bootstrap';
 import { useFormik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
@@ -24,7 +25,9 @@ const renderForm = (formik) => (
           placeholder="Enter company name"
           required
         />
-        <Button type="submit" aria-label="submit" variant="primary" disabled={formik.isSubmitting}>Submit</Button>
+        <Button style={{ width: '78px' }} type="submit" aria-label="submit" variant="primary" disabled={formik.isSubmitting}>
+          {formik.isSubmitting ? <Spinner as="span" animation="border" size="sm" /> : 'Submit'}
+        </Button>
         <FormControl.Feedback className="d-block" type="invalid">
           {formik.errors.message}
           &nbsp;
@@ -34,38 +37,42 @@ const renderForm = (formik) => (
   </Form>
 );
 
+const generateOnSubmit = (args) => async ({ companyName }, { resetForm, setErrors }) => {
+  const { dispatch, companiesNames } = args;
+  const normalizedCompanyName = companyName.toLowerCase();
+
+  if (companiesNames.includes(normalizedCompanyName)) {
+    setErrors({ message: 'This company has already been added.' });
+
+    return;
+  }
+
+  try {
+    const { data } = await actions.getCompany({ companyName: normalizedCompanyName });
+    const currentCompanyData = data[0].owner;
+
+    dispatch(actions.getCompanySuccess({ company: currentCompanyData }));
+    dispatch(actions.getReposSuccess({ repos: data, companyId: currentCompanyData.id }));
+    resetForm();
+  } catch (error) {
+    console.log(error);
+    setErrors({ message: error.message });
+  }
+};
+
 export default () => {
   const dispatch = useDispatch();
-  const companies = useSelector(({ companies: { companiesList } }) => companiesList);
+  const companiesNames = useSelector(({ companies }) => {
+    const { companiesById, allIds } = companies;
+
+    return allIds.map((id) => companiesById[id].login);
+  });
 
   const formik = useFormik({
     initialValues: {
       companyName: '',
     },
-    onSubmit: async ({ companyName }, { resetForm, setErrors }) => {
-      const normalizedCompanyName = companyName.toLowerCase();
-      const companyNames = companies.map(({ login }) => login);
-
-      if (companyNames.includes(normalizedCompanyName)) {
-        setErrors({ message: 'This company has already been added.' });
-
-        return;
-      }
-
-      try {
-        const { data } = await actions.getCompany({ companyName: normalizedCompanyName });
-        const currentCompanyData = data[0].owner;
-        console.log(data);
-        console.log(currentCompanyData);
-
-        dispatch(actions.getCompanySuccess({ company: currentCompanyData }));
-        dispatch(actions.getReposSuccess({ repos: data, companyId: currentCompanyData.id }));
-        resetForm();
-      } catch (error) {
-        console.log(error);
-        setErrors({ message: error.message });
-      }
-    },
+    onSubmit: generateOnSubmit({ companiesNames, dispatch }),
   });
 
   return renderForm(formik);
