@@ -1,4 +1,5 @@
 import './index.css';
-import runApp from './runApp.js';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import runApp from './runApp.jsx';
 
 runApp();
