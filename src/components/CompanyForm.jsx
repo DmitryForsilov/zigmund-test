@@ -65,7 +65,7 @@ export default () => {
   const companiesNames = useSelector(({ companies }) => {
     const { companiesById, allIds } = companies;
 
-    return allIds.map((id) => companiesById[id].login);
+    return allIds.map((id) => companiesById[id].login.toLowerCase());
   });
 
   const formik = useFormik({

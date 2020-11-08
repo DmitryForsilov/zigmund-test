@@ -3,10 +3,21 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const reposSlice = createSlice({
   name: 'repos',
-  initialState: {},
+  initialState: {
+    reposByCompanyId: {},
+    uiState: {
+      currentPaginationPageByCompanyId: {},
+    },
+    allIds: [],
+  },
   reducers: {
     getReposSuccess(state, { payload: { repos, companyId } }) {
-      state[companyId] = repos;
+      state.reposByCompanyId[companyId] = repos;
+      state.uiState.currentPaginationPageByCompanyId[companyId] = 1;
+      state.allIds.push(companyId);
+    },
+    setReposPaginationPage(state, { payload: { companyId, pageNumber } }) {
+      state.uiState.currentPaginationPageByCompanyId[companyId] = pageNumber;
     },
   },
 });

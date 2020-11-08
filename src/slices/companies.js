@@ -21,7 +21,7 @@ const companiesSlice = createSlice({
 });
 
 const getCompany = async ({ companyName }) => {
-  const url = `https://api.github.com/orgs/${companyName}/repos`;
+  const url = `https://api.github.com/orgs/${companyName}/repos?per_page=100`;
   const response = await axios.get(url);
 
   return response;
