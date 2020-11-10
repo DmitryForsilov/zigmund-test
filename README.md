@@ -11,13 +11,14 @@ SPA, которое позволяет загружать данные о реп
 Также переход происходит по клику на номер страницы. Для каждого списка репозиториев сохраняется текущая активная страница пагинации.
 
 ## Used in project:
-- Vanilla JS
+- TypeScript
 - React
-- Redux
-- Axios
 - React Bootstrap
+- Redux Toolkit
+- Redux Saga
+- Redux Forms
+- Axios
 - Lodash
-- Formik
 
 ## Clone the project:
 ```
@@ -32,4 +33,11 @@ npm i
 ## Start:
 ```
 npm start
+```
+
+## Examples of Companies you can use:
+```
+Facebook
+Microsoft
+Google
 ```

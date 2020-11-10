@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import ReposList from '../../components/ReposList.jsx';
+import ReposList from '../../components/ReposList';
 
-export default () => (
+const CompanyReposPage: React.FC = () => (
   <>
     <header className="mb-4 border-bottom pb-2">
       <Link to="/">Home</Link>
@@ -10,3 +10,5 @@ export default () => (
     <ReposList />
   </>
 );
+
+export default CompanyReposPage;

@@ -1,8 +1,43 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
 import { Pagination } from 'react-bootstrap';
-import createChunks from '../utils/createChunks.js';
+import utils from '../utils';
 
-const processPaginationData = (inputData) => {
+type Paginate = (num: number) => void;
+
+interface IProcessPaginationDataArgs {
+  itemsPerPage: number,
+  totalItems: number,
+  currentPage: number,
+}
+
+interface IPaginationComponentProps extends IProcessPaginationDataArgs {
+  paginate: Paginate,
+}
+
+interface IprocessPaginationDataReturn {
+  firstNumber: number,
+  lastNumber: number,
+  maxPagesCount: number,
+  paginationNumbersToRender: any[]
+}
+
+interface IOnClickPrevArgs {
+  currentPage: number,
+  paginate: Paginate,
+}
+
+interface IOnClickNextArgs extends IOnClickPrevArgs {
+  maxPagesCount: number,
+}
+
+interface IRenderPaginationNumber extends IOnClickPrevArgs {
+  number: number,
+}
+
+const processPaginationData = (
+  inputData: IProcessPaginationDataArgs,
+): IprocessPaginationDataReturn => {
   const {
     itemsPerPage, totalItems, currentPage,
   } = inputData;
@@ -17,22 +52,23 @@ const processPaginationData = (inputData) => {
   const firstNumber = allNumbers[0];
   const lastNumber = allNumbers[allNumbers.length - 1];
   const maxVisibleNumbers = 4;
-  const numbersChunks = createChunks(allNumbers, maxVisibleNumbers);
+  const numbersChunks = utils.createChunks(allNumbers, maxVisibleNumbers);
 
-  const paginationNumbersToRender = numbersChunks.find((chunk) => chunk.includes(currentPage));
+  const paginationNumbersToRender = numbersChunks
+    .find((chunk) => chunk.includes(currentPage)) || [];
 
   return {
     firstNumber, lastNumber, maxPagesCount, paginationNumbersToRender,
   };
 };
 
-const renderPaginationNumber = ({ number, paginate, currentPage }) => (
+const renderPaginationNumber = ({ number, paginate, currentPage }: IRenderPaginationNumber) => (
   <Pagination.Item key={number} onClick={() => paginate(number)} active={number === currentPage}>
     {number}
   </Pagination.Item>
 );
 
-const onClickPrev = ({ paginate, currentPage }) => () => {
+const onClickPrev = ({ paginate, currentPage }: IOnClickPrevArgs) => () => {
   if (currentPage === 1) {
     return;
   }
@@ -40,7 +76,7 @@ const onClickPrev = ({ paginate, currentPage }) => () => {
   paginate(currentPage - 1);
 };
 
-const onClickNext = ({ paginate, currentPage, maxPagesCount }) => () => {
+const onClickNext = ({ paginate, currentPage, maxPagesCount }: IOnClickNextArgs) => () => {
   if (currentPage === maxPagesCount) {
     return;
   }
@@ -48,7 +84,7 @@ const onClickNext = ({ paginate, currentPage, maxPagesCount }) => () => {
   paginate(currentPage + 1);
 };
 
-export default (props) => {
+const PaginationComponent: React.FC<IPaginationComponentProps> = (props) => {
   const {
     itemsPerPage, totalItems, paginate, currentPage,
   } = props;
@@ -70,3 +106,5 @@ export default (props) => {
     </Pagination>
   );
 };
+
+export default PaginationComponent;
