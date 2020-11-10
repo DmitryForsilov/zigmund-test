@@ -1,15 +1,22 @@
 {
   "name": "zigmund-test",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "private": true,
   "dependencies": {
     "@reduxjs/toolkit": "^1.4.0",
     "@testing-library/jest-dom": "^5.11.5",
     "@testing-library/react": "^11.1.1",
     "@testing-library/user-event": "^12.2.0",
+    "@types/jest": "^26.0.15",
+    "@types/lodash": "^4.14.165",
+    "@types/node": "^12.19.4",
+    "@types/react": "^16.9.56",
+    "@types/react-dom": "^16.9.9",
+    "@types/react-redux": "^7.1.11",
+    "@types/react-router-dom": "^5.1.6",
+    "@types/redux-form": "^8.3.0",
     "axios": "^0.21.0",
     "bootstrap": "^4.5.3",
-    "formik": "^2.2.1",
     "lodash": "^4.17.20",
     "react": "^17.0.1",
     "react-bootstrap": "^1.4.0",
@@ -17,6 +24,9 @@
     "react-redux": "^7.2.2",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.0",
+    "redux": "^4.0.5",
+    "redux-form": "^8.3.6",
+    "redux-form-saga": "^0.2.2",
     "redux-saga": "^1.1.3",
     "web-vitals": "^0.2.4"
   },
@@ -27,21 +37,20 @@
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
-    "env": {
-      "browser": true,
-      "es2020": true,
-      "node": true
+    "parser": "@typescript-eslint/parser",
+    "plugins": [
+      "@typescript-eslint"
+    ],
+    "extends": [
+      "plugin:@typescript-eslint/recommended",
+      "airbnb-typescript"
+    ],
+    "parserOptions": {
+      "project": "./tsconfig.json"
     },
-    "extends": "eslint-config-airbnb",
     "rules": {
       "import/extensions": "off",
-      "jsx-a11y/label-has-associated-control": [
-        2,
-        {}
-      ],
-      "react/prop-types": "off",
-      "no-console": "off",
-      "camelcase": "off"
+      "react/prop-types": "off"
     }
   },
   "browserslist": {
@@ -57,6 +66,9 @@
     ]
   },
   "devDependencies": {
-    "eslint-config-airbnb": "^18.2.0"
+    "@typescript-eslint/eslint-plugin": "^4.7.0",
+    "@typescript-eslint/parser": "^4.7.0",
+    "eslint-config-airbnb-typescript": "^12.0.0",
+    "typescript": "^4.0.5"
   }
 }

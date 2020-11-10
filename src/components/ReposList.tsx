@@ -1,11 +1,31 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/naming-convention */
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Col } from 'react-bootstrap';
 import _ from 'lodash';
-import Pagination from './Pagination.jsx';
-import { actions } from '../slices';
+import Pagination from './Pagination';
+import actions from '../redux/actions';
+import { RootState } from '../redux/reducers';
 
-const renderRepo = (data) => {
+interface IRenderRepoArgs {
+  name: string,
+  svn_url: string,
+  forks_count: number,
+  watchers_count: number,
+  stargazers_count: number,
+  id: number,
+}
+
+interface IUseSelectorData {
+  companyId: number,
+  companyName: string,
+  allRepos: any[],
+  currentPage: number,
+}
+
+const renderRepo = (data: IRenderRepoArgs) => {
   const {
     name, svn_url, forks_count, watchers_count, stargazers_count, id,
   } = data;
@@ -37,26 +57,38 @@ const renderRepo = (data) => {
   );
 };
 
-export default () => {
-  const companyId = useSelector(({ companies }) => companies.currentCompanyId);
-  const allRepos = useSelector(({ repos }) => repos.reposByCompanyId[companyId]);
+const ReposList: React.FC = () => {
+  const {
+    companyId, companyName, allRepos, currentPage,
+  } = useSelector((state: RootState): IUseSelectorData => {
+    const currentId: number = state.companies.currentCompanyId!;
+    const currentName: string = state.companies.companiesById[currentId].name;
+    const currentRepos: any[] = state.repos.reposByCompanyId[currentId];
+    const currentActivePage: number = state.repos
+      .uiState.currentPaginationPageByCompanyId[currentId];
+
+    return {
+      companyId: currentId,
+      companyName: currentName,
+      allRepos: currentRepos,
+      currentPage: currentActivePage,
+    };
+  });
 
   if (allRepos.length === 0) {
     return (
       <p className="text-center">This company has not posted repos yet.</p>
     );
   }
-  const currentPage = useSelector(({ repos }) => repos
-    .uiState.currentPaginationPageByCompanyId[companyId]);
+
   const dispatch = useDispatch();
 
-  const companyName = allRepos[0].owner.login;
   const reposPerPage = 3;
   const indexOfLastRepo = currentPage * reposPerPage;
   const indexOfFirstRepo = indexOfLastRepo - reposPerPage;
   const currentRepos = allRepos.slice(indexOfFirstRepo, indexOfLastRepo);
 
-  const paginate = (pageNumber) => {
+  const paginate = (pageNumber: number): void => {
     dispatch(actions.setReposPaginationPage({ companyId, pageNumber }));
   };
 
@@ -75,3 +107,5 @@ export default () => {
     </div>
   );
 };
+
+export default ReposList;
