@@ -14,15 +14,15 @@ import { useSelector, useDispatch } from 'react-redux';
 import actions from '../redux/actions';
 import { RootState } from '../redux/reducers';
 
-interface ISubmitArgs {
-  name: string
-}
-
 interface IRenderFormArgs {
   handleSubmit: any,
   onSubmit: any,
   error: Error,
   submitting: boolean
+}
+
+interface ISubmitArgs {
+  name: string
 }
 
 interface IGenerateOnSubmitArgs {

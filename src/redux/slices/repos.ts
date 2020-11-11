@@ -2,11 +2,6 @@
 /* eslint-disable no-param-reassign */
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-interface IDownloadRepos {
-  company: { name: string, id: number },
-  repos: any[]
-}
-
 interface IInitialState {
   reposByCompanyId: {
     [id: number]: any,
@@ -17,6 +12,16 @@ interface IInitialState {
     },
   },
   allIds: number[]
+}
+
+interface IDownloadRepos {
+  company: { name: string, id: number },
+  repos: any[]
+}
+
+interface ISetReposPaginationPage {
+  companyId: number,
+  pageNumber: number,
 }
 
 const initialState: IInitialState = {
@@ -38,7 +43,9 @@ const reposSlice = createSlice({
       state.uiState.currentPaginationPageByCompanyId[company.id] = 1;
       state.allIds.push(company.id);
     },
-    setReposPaginationPage(state, { payload: { companyId, pageNumber } }) {
+    setReposPaginationPage(state, action: PayloadAction<ISetReposPaginationPage>) {
+      const { companyId, pageNumber } = action.payload;
+
       state.uiState.currentPaginationPageByCompanyId[companyId] = pageNumber;
     },
   },

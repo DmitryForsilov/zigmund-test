@@ -3,16 +3,20 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { reposActions } from './repos';
 
-interface IDownloadRepos {
-  company: { name: string, id: number }
-}
-
 interface IInitialState {
   companiesById: {
     [id: number]: any,
   },
   currentCompanyId: number | null
   allIds: number[]
+}
+
+interface IDownloadRepos {
+  company: { name: string, id: number }
+}
+
+interface ISetCurrentCompanyId {
+  companyId: number
 }
 
 const initialState: IInitialState = {
@@ -25,7 +29,9 @@ const companiesSlice = createSlice({
   name: 'companies',
   initialState,
   reducers: {
-    setCurrentCompanyId(state, { payload: { companyId } }) {
+    setCurrentCompanyId(state, action: PayloadAction<ISetCurrentCompanyId>) {
+      const { companyId } = action.payload;
+
       state.currentCompanyId = companyId;
     },
   },
